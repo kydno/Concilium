@@ -1,19 +1,36 @@
 {
-  "name": "mercury-temp",
+  "name": "concilium",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license": "Apache-2.0",
+  "overrides": {
+    "postcss": "^8.5.10"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "benchmark": "tsx scripts/run-benchmark.ts",
+    "benchmark:aa-index": "tsx scripts/run-aa-benchmark.ts",
+    "benchmark:compare": "tsx scripts/compare-benchmark-runs.ts",
+    "benchmark:regression": "npm test && npm run benchmark -- --gate --only debug-01 --only debug-04 --only debug-05 --only howto-01 --only howto-02 --only compare-01 --run-id regression-open && npm run benchmark:aa-index -- --gate --trials 3 --run-id regression-aa-routed-v8"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "framer-motion": "^12.39.0",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "dotenv": "^16.6.1",
+    "tsx": "^4.20.3",
+    "vitest": "^3.2.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

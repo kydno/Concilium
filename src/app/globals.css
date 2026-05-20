@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #080808;
+  --foreground: #f5f5f5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-newsreader), Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-newsreader), Georgia, serif;
+}
+
+::selection {
+  background: #404040;
+  color: #f5f5f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #525252;
+  border-radius: 999px;
+}
+
+*:focus-visible {
+  outline: 2px solid #737373;
+  outline-offset: 2px;
+}
+
+.council-input-bar textarea:focus,
+.council-input-bar textarea:focus-visible,
+.council-input-bar button:focus,
+.council-input-bar button:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
+.prose-invert {
+  --tw-prose-body: #d4d4d4;
+  --tw-prose-headings: #f5f5f5;
+  --tw-prose-links: #e5e5e5;
+  --tw-prose-bold: #f5f5f5;
+  --tw-prose-counters: #a3a3a3;
+  --tw-prose-bullets: #737373;
+  --tw-prose-hr: #404040;
+  --tw-prose-quotes: #d4d4d4;
+  --tw-prose-quote-borders: #525252;
+  --tw-prose-captions: #a3a3a3;
+  --tw-prose-code: #f5f5f5;
+  --tw-prose-pre-code: #d4d4d4;
+  --tw-prose-pre-bg: #171717;
+  --tw-prose-th-borders: #525252;
+  --tw-prose-td-borders: #404040;
+}
+
+.prose-invert a {
+  color: #e5e5e5;
+  text-decoration-color: #737373;
+}
+
+.prose-invert a:hover {
+  color: #f5f5f5;
+}
+
+.synthesis-prose hr {
+  display: none !important;
+  border: none !important;
+  margin: 0 !important;
+  height: 0 !important;
+}
+
+.synthesis-prose em,
+.synthesis-prose i {
+  font-style: normal !important;
 }
