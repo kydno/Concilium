@@ -122,15 +122,20 @@ npx snyk test
 | Severity | Location | Finding | Notes |
 |----------|----------|---------|-------|
 | High | `src/lib/benchmark/*.ts` | Hardcoded non-crypto secret | **False positive** — sentinel `apiKey: "fallback-only"` routes to `INCEPTION_API_KEY_FALLBACK`, not a real credential |
-| Medium | `src/lib/agent-task.ts` → `council.ts` | Path traversal to `readFile` | **Review** — user-supplied paths in agent tool flows; localhost dev scope; validate before production hardening |
+| Medium | `src/lib/agent-task.ts` | Path traversal to `readFile` | **Mitigated** — `resolveWithinWorkspace()` blocks `..` and paths outside the agent temp dir (real shell is opt-in via `AGENT_REAL_SHELL=1`) |
 
 ### Secret scanning
 
-Snyk secret scan was **not available** for this org (`SNYK-CLI-0016` — feature disabled). Manual checks:
+Snyk secret scan was **not available** for this org (`SNYK-CLI-0016`). **Manual secret scan** (same intent as Snyk secrets):
 
-- `.gitignore` excludes `.env*` except `.env.example`
-- No API keys in committed source; Inception auth is server-side only
-- Never commit `.env.local`
+| Check | Result |
+|-------|--------|
+| API key / token / PEM patterns in `src/` | **None** |
+| High-entropy literals in source | **None** |
+| Secrets in `git` history | **None** (only `.env.example` placeholders) |
+| `.env.local` committed | **No** — gitignored; exists only on disk locally |
+
+Full methodology and reproducible commands: **[SECURITY.md](SECURITY.md)**.
 
 ### Application security practices
 

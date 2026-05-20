@@ -1,7 +1,7 @@
 import { execFile } from "child_process";
 import { mkdtemp, readFile, writeFile } from "fs/promises";
 import { tmpdir } from "os";
-import { join } from "path";
+import { join, resolve, sep } from "path";
 import { promisify } from "util";
 
 const execFileAsync = promisify(execFile);
@@ -51,6 +51,28 @@ async function getRealShellWorkspace(): Promise<string> {
     realShellWorkspace = await mkdtemp(join(tmpdir(), "mercury-agent-"));
   }
   return realShellWorkspace;
+}
+
+function assertSafeAgentFilename(relative: string): void {
+  if (
+    !relative ||
+    relative.includes("..") ||
+    relative.includes("/") ||
+    relative.includes("\\")
+  ) {
+    throw new Error("invalid workspace path");
+  }
+}
+
+/** Resolve a relative filename inside the agent temp workspace (blocks `..` escape). */
+function resolveWithinWorkspace(workspace: string, relative: string): string {
+  assertSafeAgentFilename(relative);
+  const root = resolve(workspace);
+  const target = resolve(join(root, relative));
+  if (target !== root && !target.startsWith(root + sep)) {
+    throw new Error("path escapes workspace");
+  }
+  return target;
 }
 
 export interface AgentTaskResult {
@@ -423,6 +445,7 @@ function runMockFsCommand(
   if (redirect) {
     const content = redirect[1]!.trim();
     const path = redirect[2]!;
+    assertSafeAgentFilename(path);
     mockVfs.set(path, content.endsWith("\n") ? content : `${content}\n`);
     return { stdout: "", exitCode: 0 };
   }
@@ -430,6 +453,7 @@ function runMockFsCommand(
   const cat = CAT_FILE.exec(normalized);
   if (cat) {
     const path = cat[1]!;
+    assertSafeAgentFilename(path);
     if (!mockVfs.has(path)) {
       return {
         stdout: "",
@@ -459,7 +483,7 @@ async function runRealShellCommand(
   const redirect = ECHO_REDIRECT.exec(normalized);
   if (redirect) {
     const content = redirect[1]!.trim();
-    const path = join(workspace, redirect[2]!);
+    const path = resolveWithinWorkspace(workspace, redirect[2]!);
     await writeFile(path, content.endsWith("\n") ? content : `${content}\n`, "utf8");
     return {
       command: normalized,
@@ -472,7 +496,7 @@ async function runRealShellCommand(
 
   const cat = CAT_FILE.exec(normalized);
   if (cat) {
-    const path = join(workspace, cat[1]!);
+    const path = resolveWithinWorkspace(workspace, cat[1]!);
     try {
       const stdout = await readFile(path, "utf8");
       return {

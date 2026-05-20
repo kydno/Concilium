@@ -36,6 +36,10 @@ describe("agent-task", () => {
     expect(normalizeAgentCommand("echo   bench-ok")).toBe("echo bench-ok");
   });
 
+  it("rejects path traversal in agent file commands", async () => {
+    await expect(runAgentTask("cat ..")).rejects.toThrow(/invalid workspace path/);
+  });
+
   it("extracts tool blocks in document order", () => {
     const markdown = [
       "Analysis",
