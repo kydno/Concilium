@@ -221,7 +221,3 @@ See [`APIOptions`](APIOptions) for additional client examples (placeholders only
 | `scripts/` | Benchmark runners + DB schema |
 
 ---
-
-## License
-
-Licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE).
