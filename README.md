@@ -2,8 +2,6 @@
 
 **Concilium** is a localhost-first **Mercury 2** model council powered by [Inception Labs](https://docs.inceptionlabs.ai/). Ask a question and three dynamically assigned council members deliberate in parallel before a chair synthesizes one unified answer — Perplexity-style structure with a Mercury 2 orchestrator.
 
-Repository: [github.com/kadinsolaiman8-spec/Concilium](https://github.com/kadinsolaiman8-spec/Concilium)
-
 ## Features
 
 - **Adaptive routing** — `single`, `lite`, or `full` council based on task shape (MCQ, debug, long compare, agent-graded fixtures, etc.)
