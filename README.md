@@ -99,33 +99,6 @@ Regression gate target: **≥90%** win rate (`npm run benchmark -- --gate --run-
 
 ---
 
-## Security report (Snyk)
-
-Scans run via [Snyk](https://snyk.io/) MCP on **2026-05-20** against `c:\Users\kadin\Downloads\Mercury2-Council`.
-
-### Open-source dependencies (SCA)
-
-| Severity | Package | Issue | Status |
-|----------|---------|-------|--------|
-| ~~Medium~~ | ~~`postcss@8.4.31` (via `next`)~~ | CVE-2026-41305 XSS (CWE-79) | **Resolved** — `package.json` `overrides` pin `postcss@^8.5.10`; re-scan shows **0 SCA issues** |
-
-Re-verify after `npm install`:
-
-```bash
-npx snyk test
-```
-
-### Static analysis (Snyk Code)
-
-| Severity | Location | Finding | Notes |
-|----------|----------|---------|-------|
-| High | `src/lib/benchmark/*.ts` | Hardcoded non-crypto secret | **False positive** — sentinel `apiKey: "fallback-only"` routes to `INCEPTION_API_KEY_FALLBACK`, not a real credential |
-| Medium | `src/lib/agent-task.ts` | Path traversal to `readFile` | **Mitigated** — `resolveWithinWorkspace()` blocks `..` and paths outside the agent temp dir (real shell is opt-in via `AGENT_REAL_SHELL=1`) |
-
-### Secret scanning
-
-Snyk secret scan was **not available** for this org (`SNYK-CLI-0016`). **Manual secret scan** (same intent as Snyk secrets):
-
 | Check | Result |
 |-------|--------|
 | API key / token / PEM patterns in `src/` | **None** |
